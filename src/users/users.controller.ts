@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { LoginUserDto, RegisterUserDto } from './dto/create-user.dto';
+import { LoginUserDto, RegisterUserDto } from './dto/user.dto';
 import { DepositAmountDto } from './dto/deposit.dto';
 import type { RequestWithUser } from './types';
 

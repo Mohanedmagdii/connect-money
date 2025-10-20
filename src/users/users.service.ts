@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { LoginUserDto, RegisterUserDto } from './dto/create-user.dto';
+import { LoginUserDto, RegisterUserDto } from './dto/user.dto';
 import { User, UserDocument } from 'src/schemas/users.schema';
 import { Model, Connection } from 'mongoose';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
