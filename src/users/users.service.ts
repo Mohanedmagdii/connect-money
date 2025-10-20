@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { LoginUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from 'src/schemas/users.schema';
 import { Model, Connection } from 'mongoose';
@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Transaction, TransactionDocument } from 'src/schemas/transactions.schema';
 import { DepositAmountDto } from './dto/deposit.dto';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,8 @@ export class UsersService {
     @InjectModel(Transaction.name)
     private transactionModel: Model<TransactionDocument>,
     @InjectConnection()
-    private connection: Connection
+    private connection: Connection,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) { }
 
   async register(registerUserDto: RegisterUserDto) {
@@ -100,6 +102,8 @@ export class UsersService {
         { $inc: { balance: amount } },
         { new: true, session }
       );
+
+      await this.cacheManager.set(`user:${userId}`, JSON.stringify(updatedUser));
 
       await session.commitTransaction();
 
